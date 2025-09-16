@@ -5,140 +5,31 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { usePackages } from '@/hooks/usePackages';
+import { useServices } from '@/hooks/useServices';
 import { EnquiryDialog } from '@/components/EnquiryDialog';
-import { Phone, MessageCircle, Star, Award, Users, Clock } from 'lucide-react';
-import { Link } from 'react-router-dom';
-
-const services = [
-  {
-    title: "🛠️ Plumbing Services",
-    icon: "🛠️",
-    items: [
-      "Tap / Shower / Mixer Installation & Repair",
-      "Pipeline Leakage Fix",
-      "Bathroom Setup (New Construction)",
-      "Water Tank Installation / Cleaning",
-      "Motor/Pump Installation",
-      "Geyser Installation"
-    ]
-  },
-  {
-    title: "💡 Electrical Services", 
-    icon: "💡",
-    items: [
-      "House Wiring (Full / Partial)",
-      "Switchboard Installation & Repair",
-      "Fan / Light / Chandelier Installation",
-      "Inverter Wiring Setup",
-      "Power Backup Wiring",
-      "Short Circuit Fix"
-    ]
-  },
-  {
-    title: "🧱 Masonry & Civil Works",
-    icon: "🧱", 
-    items: [
-      "Brick Wall Construction",
-      "Wall Repairs / Plastering",
-      "Compound Wall Construction",
-      "Floor Extension (add room/floor)",
-      "Cement Slab Work"
-    ]
-  },
-  {
-    title: "🏠 Tiles & Flooring",
-    icon: "🏠",
-    items: [
-      "Tile Laying (Bathroom / Kitchen / Full House)",
-      "Marble / Granite Work",
-      "Tile Replacements",
-      "Tile Polishing"
-    ]
-  },
-  {
-    title: "🎨 Painting & Finishing",
-    icon: "🎨",
-    items: [
-      "Interior Wall Painting",
-      "Exterior Painting", 
-      "Waterproof Coating",
-      "Wall Putty Work",
-      "Texture / Stencil Painting"
-    ]
-  },
-  {
-    title: "🪚 Carpentry & Woodwork",
-    icon: "🪚",
-    items: [
-      "Door / Window Frame Installation",
-      "Door Designing & Polishing",
-      "Cupboard/Wardrobe Making",
-      "Modular Kitchen",
-      "Furniture Repair"
-    ]
-  },
-  {
-    title: "🔩 Fabrication & Metal Work",
-    icon: "🔩", 
-    items: [
-      "Steel / MS / SS Railings",
-      "Grills & Gates",
-      "Shed / Roofing",
-      "Rolling Shutters"
-    ]
-  },
-  {
-    title: "🛋️ Interior & Aesthetic Work",
-    icon: "🛋️",
-    items: [
-      "False Ceiling",
-      "POP Design",
-      "Wall Partitions",
-      "Wallpaper / 3D Panel Installation",
-      "Lighting Design"
-    ]
-  },
-  {
-    title: "🌳 Plot & Outdoor Services",
-    icon: "🌳",
-    items: [
-      "Plot Cleaning (Manual / JCB)",
-      "Borewell Drilling & Repair",
-      "Landscaping & Gardening", 
-      "Water Tank / Septic Tank Cleaning"
-    ]
-  },
-  {
-    title: "👷 Worker Contracts",
-    icon: "👷",
-    items: [
-      "Mason Daily/Monthly Contract",
-      "Painter Contract",
-      "Carpenter Contract", 
-      "General Labor Supply"
-    ]
-  },
-  {
-    title: "🏗️ Complete Construction",
-    icon: "🏗️",
-    items: [
-      "Full House Construction (Turnkey)",
-      "Renovation (Kitchen/Bathroom/Full House)",
-      "Independent House Extension (Extra Floor)",
-      "Interior Design + Execution"
-    ]
-  }
-];
+import { Phone, MessageCircle, Star, Award, Users, Clock, Palette, UserCheck } from 'lucide-react';
 
 const Index = () => {
   const { packages, loading: packagesLoading } = usePackages();
+  const { services, loading: servicesLoading } = useServices();
   
   const handleCall = () => {
     window.open('tel:+919182498628', '_self');
   };
 
   const handleWhatsApp = () => {
-    window.open('https://wa.me/919182498628', '_blank');
+    const message = encodeURIComponent("Hi! I'm interested in your home services. Please provide more details.");
+    window.open(`https://wa.me/919182498628?text=${message}`, '_blank');
+  };
+
+  const handleBookInteriorDesigner = () => {
+    const message = encodeURIComponent("Hi! I would like to book an interior designer consultation. Please provide available slots.");
+    window.open(`https://wa.me/919182498628?text=${message}`, '_blank');
+  };
+
+  const handleBookConsultation = () => {
+    const message = encodeURIComponent("Hi! I would like to book a consultation for home services. Please contact me.");
+    window.open(`https://wa.me/919182498628?text=${message}`, '_blank');
   };
 
   // Group packages by service category
@@ -164,7 +55,7 @@ const Index = () => {
             From plumbing to complete construction - we handle all your home improvement needs with expert craftsmanship and reliable service.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-bounce-in">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-bounce-in mb-6">
             <EnquiryDialog>
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-elegant">
                 Get Free Quote
@@ -179,6 +70,28 @@ const Index = () => {
             >
               <Phone className="w-5 h-5 mr-2" />
               Call: 91824 98628
+            </Button>
+          </div>
+
+          {/* Special Service Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Button 
+              onClick={handleBookInteriorDesigner}
+              size="lg"
+              className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-elegant"
+            >
+              <Palette className="w-5 h-5 mr-2" />
+              Book Interior Designer
+            </Button>
+            
+            <Button 
+              onClick={handleBookConsultation}
+              variant="outline"
+              size="lg"
+              className="border-accent/20 hover:bg-accent/10"
+            >
+              <UserCheck className="w-5 h-5 mr-2" />
+              Book Consultation
             </Button>
           </div>
 
@@ -210,16 +123,20 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {services.map((service, index) => (
-              <ServiceCard
-                key={index}
-                service={service}
-                icon={service.icon}
-                index={index}
-              />
-            ))}
-          </div>
+          {servicesLoading ? (
+            <div className="text-center py-8 text-muted-foreground">Loading services...</div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {services.map((service, index) => (
+                <ServiceCard
+                  key={service.id}
+                  service={service}
+                  icon={service.icon}
+                  index={index}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -288,11 +205,11 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Admin Link (hidden in plain sight) */}
+      {/* Footer */}
       <div className="text-center py-4 bg-muted/50">
-        <Link to="/admin" className="text-xs text-muted-foreground hover:text-primary transition-colors">
-          Admin
-        </Link>
+        <p className="text-xs text-muted-foreground">
+          © 2025 TrustMax. All rights reserved.
+        </p>
       </div>
     </div>
   );

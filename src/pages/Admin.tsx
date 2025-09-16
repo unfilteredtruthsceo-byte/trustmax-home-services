@@ -7,14 +7,24 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useEnquiries } from '@/hooks/useEnquiries';
 import { usePackages } from '@/hooks/usePackages';
-import { BarChart, Users, Clock, CheckCircle, Phone, MapPin, Calendar, Filter } from 'lucide-react';
+import { PackageManagement } from '@/components/PackageManagement';
+import { ServiceManagement } from '@/components/ServiceManagement';
+import { AdminProtectedRoute } from '@/components/AdminProtectedRoute';
+import { BarChart, Users, Clock, CheckCircle, Phone, MapPin, Calendar, Filter, LogOut } from 'lucide-react';
 import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 export function Admin() {
   const { enquiries, updateEnquiry, loading: enquiriesLoading } = useEnquiries();
   const { packages, loading: packagesLoading } = usePackages();
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [filterService, setFilterService] = useState<string>('all');
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('adminLoggedIn');
+    navigate('/admin-login');
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -49,12 +59,21 @@ export function Admin() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-primary mb-2">TrustMax Admin Panel</h1>
-          <p className="text-muted-foreground">Manage enquiries and packages</p>
-        </div>
+    <AdminProtectedRoute>
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-8">
+          <div className="mb-8">
+            <div className="flex justify-between items-center">
+              <div>
+                <h1 className="text-3xl font-bold text-primary mb-2">TrustMax Admin Panel</h1>
+                <p className="text-muted-foreground">Manage enquiries, packages and services</p>
+              </div>
+              <Button variant="outline" onClick={handleLogout}>
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </Button>
+            </div>
+          </div>
 
         {/* Dashboard Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -115,11 +134,12 @@ export function Admin() {
           </Card>
         </div>
 
-        <Tabs defaultValue="enquiries" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="enquiries">Enquiries Management</TabsTrigger>
-            <TabsTrigger value="packages">Packages Management</TabsTrigger>
-          </TabsList>
+          <Tabs defaultValue="enquiries" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="enquiries">Enquiries</TabsTrigger>
+              <TabsTrigger value="packages">Packages</TabsTrigger>
+              <TabsTrigger value="services">Services</TabsTrigger>
+            </TabsList>
 
           <TabsContent value="enquiries" className="space-y-6">
             {/* Filters */}
@@ -259,40 +279,16 @@ export function Admin() {
             </div>
           </TabsContent>
 
-          <TabsContent value="packages" className="space-y-6">
-            <Card className="shadow-card">
-              <CardHeader>
-                <CardTitle>Packages Overview</CardTitle>
-                <CardDescription>
-                  Manage service packages and pricing. Total packages: {packages.length}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {packagesLoading ? (
-                  <div className="text-center py-8 text-muted-foreground">Loading packages...</div>
-                ) : (
-                  <div className="grid gap-4">
-                    {packages.map((pkg) => (
-                      <div key={pkg.id} className="p-4 border border-border/50 rounded-lg">
-                        <div className="flex justify-between items-start">
-                          <div className="flex-1">
-                            <h4 className="font-semibold text-foreground">{pkg.package_name}</h4>
-                            <p className="text-sm text-muted-foreground mt-1">{pkg.description}</p>
-                            <p className="text-sm font-medium text-primary mt-2">{pkg.pricing}</p>
-                          </div>
-                          <Badge variant="outline" className="ml-4">
-                            {pkg.service_category}
-                          </Badge>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+            <TabsContent value="packages" className="space-y-6">
+              <PackageManagement />
+            </TabsContent>
+
+            <TabsContent value="services" className="space-y-6">
+              <ServiceManagement />
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
-    </div>
+    </AdminProtectedRoute>
   );
 }

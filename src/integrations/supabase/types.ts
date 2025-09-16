@@ -89,6 +89,39 @@ export type Database = {
         }
         Relationships: []
       }
+      services: {
+        Row: {
+          created_at: string
+          description: string | null
+          icon: string
+          id: string
+          image_url: string | null
+          items: string[]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          icon: string
+          id?: string
+          image_url?: string | null
+          items: string[]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          icon?: string
+          id?: string
+          image_url?: string | null
+          items?: string[]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
