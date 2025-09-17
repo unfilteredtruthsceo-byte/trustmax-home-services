@@ -20,7 +20,7 @@ const Index = () => {
   };
 
   const handleWhatsApp = () => {
-    window.open('https://wa.link/9e5beg', '_blank');
+    window.open('https://web.whatsapp.com/send?phone=919182498628&text=Hi! I need help with home services', '_blank');
   };
 
   // Group packages by service category
