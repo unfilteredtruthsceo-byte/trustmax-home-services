@@ -126,10 +126,14 @@ export function ServiceManagement() {
                 <Label htmlFor="image_url">Image URL</Label>
                 <Input
                   id="image_url"
+                  type="url"
                   value={formData.image_url}
                   onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))}
                   placeholder="https://example.com/image.jpg"
                 />
+                <div className="text-xs text-muted-foreground">
+                  Or upload to a service like Imgur, Cloudinary, or use a direct image URL
+                </div>
               </div>
 
               <div className="space-y-2">

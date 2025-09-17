@@ -7,6 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { usePackages } from '@/hooks/usePackages';
 import { useServices } from '@/hooks/useServices';
 import { EnquiryDialog } from '@/components/EnquiryDialog';
+import { InteriorDesignDialog } from '@/components/InteriorDesignDialog';
+import { ConsultationDialog } from '@/components/ConsultationDialog';
 import { Phone, MessageCircle, Star, Award, Users, Clock, Palette, UserCheck } from 'lucide-react';
 
 const Index = () => {
@@ -19,17 +21,7 @@ const Index = () => {
 
   const handleWhatsApp = () => {
     const message = encodeURIComponent("Hi! I'm interested in your home services. Please provide more details.");
-    window.open(`https://wa.me/919182498628?text=${message}`, '_blank');
-  };
-
-  const handleBookInteriorDesigner = () => {
-    const message = encodeURIComponent("Hi! I would like to book an interior designer consultation. Please provide available slots.");
-    window.open(`https://wa.me/919182498628?text=${message}`, '_blank');
-  };
-
-  const handleBookConsultation = () => {
-    const message = encodeURIComponent("Hi! I would like to book a consultation for home services. Please contact me.");
-    window.open(`https://wa.me/919182498628?text=${message}`, '_blank');
+    window.open(`https://web.whatsapp.com/send?phone=919182498628&text=${message}`, '_blank');
   };
 
   // Group packages by service category
@@ -75,24 +67,26 @@ const Index = () => {
 
           {/* Special Service Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button 
-              onClick={handleBookInteriorDesigner}
-              size="lg"
-              className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-elegant"
-            >
-              <Palette className="w-5 h-5 mr-2" />
-              Book Interior Designer
-            </Button>
+            <InteriorDesignDialog>
+              <Button 
+                size="lg"
+                className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-elegant"
+              >
+                <Palette className="w-5 h-5 mr-2" />
+                Book Interior Designer
+              </Button>
+            </InteriorDesignDialog>
             
-            <Button 
-              onClick={handleBookConsultation}
-              variant="outline"
-              size="lg"
-              className="border-accent/20 hover:bg-accent/10"
-            >
-              <UserCheck className="w-5 h-5 mr-2" />
-              Book Consultation
-            </Button>
+            <ConsultationDialog>
+              <Button 
+                variant="outline"
+                size="lg"
+                className="border-accent/20 hover:bg-accent/10"
+              >
+                <UserCheck className="w-5 h-5 mr-2" />
+                Book Consultation
+              </Button>
+            </ConsultationDialog>
           </div>
 
           {/* Trust Indicators */}

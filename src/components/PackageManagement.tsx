@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { usePackages, Package } from '@/hooks/usePackages';
-import { Plus, Edit2, Trash2, Package2 } from 'lucide-react';
+import { Plus, Edit2, Trash2, Package2, Image } from 'lucide-react';
 
 const serviceCategories = [
   "Plumbing", "Electrical", "Masonry", "Tiles & Flooring", 
@@ -24,7 +24,8 @@ export function PackageManagement() {
     service_category: '',
     package_name: '',
     description: '',
-    pricing: ''
+    pricing: '',
+    image_url: ''
   });
 
   const resetForm = () => {
@@ -32,7 +33,8 @@ export function PackageManagement() {
       service_category: '',
       package_name: '',
       description: '',
-      pricing: ''
+      pricing: '',
+      image_url: ''
     });
     setEditingPackage(null);
   };
@@ -56,7 +58,8 @@ export function PackageManagement() {
       service_category: pkg.service_category,
       package_name: pkg.package_name,
       description: pkg.description,
-      pricing: pkg.pricing
+      pricing: pkg.pricing,
+      image_url: (pkg as any).image_url || ''
     });
     setIsDialogOpen(true);
   };
@@ -138,6 +141,20 @@ export function PackageManagement() {
                 />
               </div>
 
+              <div className="space-y-2">
+                <Label htmlFor="image_url">Package Image URL</Label>
+                <Input
+                  id="image_url"
+                  type="url"
+                  value={formData.image_url}
+                  onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))}
+                  placeholder="https://example.com/package-image.jpg"
+                />
+                <div className="text-xs text-muted-foreground">
+                  Or upload to a service like Imgur, Cloudinary, or use a direct image URL
+                </div>
+              </div>
+
               <div className="flex gap-2">
                 <Button type="submit" className="flex-1">
                   {editingPackage ? 'Update' : 'Create'}
@@ -168,9 +185,17 @@ export function PackageManagement() {
                       <Package2 className="w-5 h-5" />
                       {pkg.package_name}
                     </CardTitle>
-                    <Badge variant="outline" className="mt-2">
-                      {pkg.service_category}
-                    </Badge>
+                    <div className="flex items-center gap-2 mt-2">
+                      <Badge variant="outline">
+                        {pkg.service_category}
+                      </Badge>
+                      {(pkg as any).image_url && (
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <Image className="w-3 h-3" />
+                          <span>Has image</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <div className="flex gap-2">
                     <Button
