@@ -20,8 +20,7 @@ const Index = () => {
   };
 
   const handleWhatsApp = () => {
-    const message = encodeURIComponent("Hi! I'm interested in your home services. Please provide more details.");
-    window.open(`https://web.whatsapp.com/send?phone=919182498628&text=${message}`, '_blank');
+    window.open('https://wa.link/9e5beg', '_blank');
   };
 
   // Group packages by service category

@@ -8,7 +8,7 @@ export function Header() {
   };
 
   const handleWhatsApp = () => {
-    window.open('https://wa.me/919182498628', '_blank');
+    window.open('https://wa.link/9e5beg', '_blank');
   };
 
   return (
