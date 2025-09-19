@@ -192,7 +192,23 @@ export function Admin() {
                     <CardHeader>
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div>
-                          <CardTitle className="text-lg">{enquiry.name}</CardTitle>
+                          <div className="flex items-center gap-2 mb-1">
+                            <CardTitle className="text-lg">{enquiry.name}</CardTitle>
+                            <Badge 
+                              variant="outline" 
+                              className={
+                                enquiry.enquiry_type === 'package' ? 'bg-purple-100 text-purple-800 border-purple-300' :
+                                enquiry.enquiry_type === 'interior_design' ? 'bg-pink-100 text-pink-800 border-pink-300' :
+                                enquiry.enquiry_type === 'consultation' ? 'bg-blue-100 text-blue-800 border-blue-300' :
+                                'bg-gray-100 text-gray-800 border-gray-300'
+                              }
+                            >
+                              {enquiry.enquiry_type === 'package' ? '📦 Package' :
+                               enquiry.enquiry_type === 'interior_design' ? '🎨 Interior Design' :
+                               enquiry.enquiry_type === 'consultation' ? '💬 Consultation' :
+                               '📝 General'}
+                            </Badge>
+                          </div>
                           <CardDescription className="flex items-center gap-2 mt-1">
                             <Calendar className="w-4 h-4" />
                             {format(new Date(enquiry.created_at), 'PPp')}
@@ -224,6 +240,13 @@ export function Admin() {
                           <div>
                             <span className="text-sm font-medium text-muted-foreground">Service: </span>
                             <span className="text-sm">{enquiry.service_type}</span>
+                            {enquiry.enquiry_type === 'package' && (
+                              <div className="mt-1">
+                                <span className="text-xs text-purple-600 font-medium">
+                                  📦 Customer enquired for a specific package
+                                </span>
+                              </div>
+                            )}
                           </div>
                           {enquiry.budget && (
                             <div>

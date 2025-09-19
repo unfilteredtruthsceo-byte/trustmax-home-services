@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useEnquiries } from '@/hooks/useEnquiries';
+import { LocationInput } from './LocationInput';
 import { Loader2, Palette } from 'lucide-react';
 
 interface InteriorDesignDialogProps {
@@ -164,13 +165,10 @@ Additional Details: ${formData.description}`;
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="location">Exact Location *</Label>
-            <Input
-              id="location"
+            <LocationInput
               value={formData.location}
-              onChange={(e) => handleInputChange('location', e.target.value)}
+              onChange={(value) => handleInputChange('location', value)}
               required
-              placeholder="Enter your complete address with landmarks"
             />
           </div>
 
