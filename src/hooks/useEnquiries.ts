@@ -13,6 +13,7 @@ export interface Enquiry {
   budget?: string;
   status: 'pending' | 'assigned' | 'completed' | 'cancelled';
   assigned_worker?: string;
+  enquiry_type: 'general' | 'package' | 'interior_design' | 'consultation';
   created_at: string;
   updated_at: string;
 }

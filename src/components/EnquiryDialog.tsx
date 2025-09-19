@@ -11,6 +11,8 @@ import { Loader2 } from 'lucide-react';
 interface EnquiryDialogProps {
   children: React.ReactNode;
   defaultService?: string;
+  enquiryType?: 'general' | 'package' | 'interior_design' | 'consultation';
+  packageName?: string;
 }
 
 const serviceOptions = [
@@ -27,7 +29,7 @@ const serviceOptions = [
   'Complete Construction'
 ];
 
-export function EnquiryDialog({ children, defaultService }: EnquiryDialogProps) {
+export function EnquiryDialog({ children, defaultService, enquiryType = 'general', packageName }: EnquiryDialogProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -49,7 +51,8 @@ export function EnquiryDialog({ children, defaultService }: EnquiryDialogProps) 
 
     const result = await createEnquiry({
       ...formData,
-      email: formData.email || undefined
+      email: formData.email || undefined,
+      enquiry_type: enquiryType
     });
 
     if (result.success) {
@@ -101,7 +104,9 @@ export function EnquiryDialog({ children, defaultService }: EnquiryDialogProps) 
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-primary">Get Free Quote</DialogTitle>
+          <DialogTitle className="text-xl font-bold text-primary">
+            {enquiryType === 'package' && packageName ? `Quote for ${packageName}` : 'Get Free Quote'}
+          </DialogTitle>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -150,28 +155,36 @@ export function EnquiryDialog({ children, defaultService }: EnquiryDialogProps) 
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="service">Service Required *</Label>
-            <Select value={formData.service_type} onValueChange={(value) => handleInputChange('service_type', value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select a service" />
-              </SelectTrigger>
-              <SelectContent>
-                {serviceOptions.map(service => (
-                  <SelectItem key={service} value={service}>{service}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {enquiryType !== 'package' && (
+            <div className="space-y-2">
+              <Label htmlFor="service">Service Required *</Label>
+              <Select value={formData.service_type} onValueChange={(value) => handleInputChange('service_type', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a service" />
+                </SelectTrigger>
+                <SelectContent>
+                  {serviceOptions.map(service => (
+                    <SelectItem key={service} value={service}>{service}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           <div className="space-y-2">
-            <Label htmlFor="description">Work Description *</Label>
+            <Label htmlFor="description">
+              {enquiryType === 'package' ? 'Additional Requirements' : 'Work Description'} *
+            </Label>
             <Textarea
               id="description"
               value={formData.description}
               onChange={(e) => handleInputChange('description', e.target.value)}
               required
-              placeholder="Describe the work you need done"
+              placeholder={
+                enquiryType === 'package' 
+                  ? 'Any specific requirements or modifications needed for this package'
+                  : 'Describe the work you need done'
+              }
               rows={3}
             />
           </div>

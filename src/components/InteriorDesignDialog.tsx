@@ -69,7 +69,8 @@ Additional Details: ${formData.description}`;
       location: formData.location,
       service_type: 'Interior Design',
       description: enquiryDescription,
-      budget: formData.budget
+      budget: formData.budget || undefined,
+      enquiry_type: 'interior_design'
     });
 
     if (result.success) {

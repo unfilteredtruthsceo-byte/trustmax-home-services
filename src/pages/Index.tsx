@@ -66,7 +66,7 @@ const Index = () => {
 
           {/* Special Service Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <InteriorDesignDialog>
+            <EnquiryDialog enquiryType="interior_design">
               <Button 
                 size="lg"
                 className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-elegant"
@@ -74,9 +74,9 @@ const Index = () => {
                 <Palette className="w-5 h-5 mr-2" />
                 Book Interior Designer
               </Button>
-            </InteriorDesignDialog>
+            </EnquiryDialog>
             
-            <ConsultationDialog>
+            <EnquiryDialog enquiryType="consultation">
               <Button 
                 variant="outline"
                 size="lg"
@@ -85,7 +85,7 @@ const Index = () => {
                 <UserCheck className="w-5 h-5 mr-2" />
                 Book Consultation
               </Button>
-            </ConsultationDialog>
+            </EnquiryDialog>
           </div>
 
           {/* Trust Indicators */}

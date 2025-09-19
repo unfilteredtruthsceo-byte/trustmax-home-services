@@ -65,7 +65,8 @@ Details: ${formData.description}`;
       email: formData.email || undefined,
       location: formData.location,
       service_type: 'Consultation',
-      description: enquiryDescription
+      description: enquiryDescription,
+      enquiry_type: 'consultation'
     });
 
     if (result.success) {

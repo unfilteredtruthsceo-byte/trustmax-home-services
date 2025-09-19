@@ -25,7 +25,11 @@ export function PackageCard({ package: pkg }: PackageCardProps) {
           <div className="text-lg font-semibold text-primary">{pkg.pricing}</div>
         </div>
         
-        <EnquiryDialog defaultService={pkg.service_category}>
+        <EnquiryDialog 
+          defaultService={pkg.service_category}
+          enquiryType="package"
+          packageName={pkg.package_name}
+        >
           <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground shadow-md hover:shadow-elegant transition-smooth">
             Get Quote
           </Button>
