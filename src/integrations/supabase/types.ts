@@ -67,6 +67,7 @@ export type Database = {
           created_at: string
           description: string
           id: string
+          image_url: string | null
           package_name: string
           pricing: string
           service_category: string
@@ -76,6 +77,7 @@ export type Database = {
           created_at?: string
           description: string
           id?: string
+          image_url?: string | null
           package_name: string
           pricing: string
           service_category: string
@@ -85,6 +87,7 @@ export type Database = {
           created_at?: string
           description?: string
           id?: string
+          image_url?: string | null
           package_name?: string
           pricing?: string
           service_category?: string

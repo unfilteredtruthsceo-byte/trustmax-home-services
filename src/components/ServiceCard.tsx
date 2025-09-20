@@ -5,6 +5,7 @@ import { EnquiryDialog } from './EnquiryDialog';
 interface Service {
   title: string;
   items: string[];
+  image_url?: string;
 }
 
 interface ServiceCardProps {
@@ -16,6 +17,15 @@ interface ServiceCardProps {
 export function ServiceCard({ service, icon, index }: ServiceCardProps) {
   return (
     <Card className="shadow-card hover:shadow-elegant transition-smooth group hover:-translate-y-1 border-border/50">
+      {service.image_url && (
+        <div className="aspect-video overflow-hidden rounded-t-lg">
+          <img 
+            src={service.image_url} 
+            alt={service.title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-smooth"
+          />
+        </div>
+      )}
       <CardHeader className="pb-4">
         <div className="flex items-start gap-4">
           <div className="text-3xl group-hover:scale-110 transition-smooth">

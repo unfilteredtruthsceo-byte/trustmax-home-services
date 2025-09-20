@@ -9,6 +9,7 @@ import { useEnquiries } from '@/hooks/useEnquiries';
 import { usePackages } from '@/hooks/usePackages';
 import { PackageManagement } from '@/components/PackageManagement';
 import { ServiceManagement } from '@/components/ServiceManagement';
+import { useServices } from '@/hooks/useServices';
 import { AdminProtectedRoute } from '@/components/AdminProtectedRoute';
 import { BarChart, Users, Clock, CheckCircle, Phone, MapPin, Calendar, Filter, LogOut } from 'lucide-react';
 import { format } from 'date-fns';
@@ -17,6 +18,7 @@ import { useNavigate } from 'react-router-dom';
 export function Admin() {
   const { enquiries, updateEnquiry, loading: enquiriesLoading } = useEnquiries();
   const { packages, loading: packagesLoading } = usePackages();
+  const { services, loading: servicesLoading } = useServices();
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [filterService, setFilterService] = useState<string>('all');
   const navigate = useNavigate();
@@ -135,10 +137,11 @@ export function Admin() {
         </div>
 
           <Tabs defaultValue="enquiries" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="enquiries">Enquiries</TabsTrigger>
               <TabsTrigger value="packages">Packages</TabsTrigger>
               <TabsTrigger value="services">Services</TabsTrigger>
+              <TabsTrigger value="images">Image Gallery</TabsTrigger>
             </TabsList>
 
           <TabsContent value="enquiries" className="space-y-6">
@@ -308,6 +311,81 @@ export function Admin() {
 
             <TabsContent value="services" className="space-y-6">
               <ServiceManagement />
+            </TabsContent>
+
+            <TabsContent value="images" className="space-y-6">
+              <Card className="shadow-card">
+                <CardHeader>
+                  <CardTitle>Image Gallery & Upload</CardTitle>
+                  <CardDescription>
+                    View and access images from packages and services. Use image hosting services like Imgur, Cloudinary, or direct URLs.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-semibold mb-3">Package Images</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {packages.filter(pkg => (pkg as any).image_url).map((pkg) => (
+                        <div key={pkg.id} className="space-y-2">
+                          <div className="aspect-video bg-muted rounded-lg overflow-hidden">
+                            <img 
+                              src={(pkg as any).image_url} 
+                              alt={pkg.package_name}
+                              className="w-full h-full object-cover hover:scale-105 transition-smooth cursor-pointer"
+                              onClick={() => window.open((pkg as any).image_url, '_blank')}
+                            />
+                          </div>
+                          <div className="text-sm">
+                            <p className="font-medium">{pkg.package_name}</p>
+                            <p className="text-xs text-muted-foreground">{pkg.service_category}</p>
+                          </div>
+                        </div>
+                      ))}
+                      {packages.filter(pkg => (pkg as any).image_url).length === 0 && (
+                        <div className="col-span-full text-center py-8 text-muted-foreground">
+                          No package images uploaded yet
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-semibold mb-3">Service Images</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {services.filter(service => service.image_url).map((service) => (
+                        <div key={service.id} className="space-y-2">
+                          <div className="aspect-video bg-muted rounded-lg overflow-hidden">
+                            <img 
+                              src={service.image_url!} 
+                              alt={service.title}
+                              className="w-full h-full object-cover hover:scale-105 transition-smooth cursor-pointer"
+                              onClick={() => window.open(service.image_url!, '_blank')}
+                            />
+                          </div>
+                          <div className="text-sm">
+                            <p className="font-medium">{service.title}</p>
+                          </div>
+                        </div>
+                      ))}
+                      {services.filter(service => service.image_url).length === 0 && (
+                        <div className="col-span-full text-center py-8 text-muted-foreground">
+                          No service images uploaded yet
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <h4 className="font-medium text-blue-900 mb-2">Image Upload Instructions</h4>
+                    <div className="text-sm text-blue-800 space-y-1">
+                      <p>• Upload images to free services like <a href="https://imgur.com/upload" target="_blank" className="underline hover:text-blue-600">Imgur</a></p>
+                      <p>• Use <a href="https://cloudinary.com" target="_blank" className="underline hover:text-blue-600">Cloudinary</a> for professional image management</p>
+                      <p>• Copy the direct image URL and paste it in the package/service form</p>
+                      <p>• Recommended image size: 800x450px (16:9 aspect ratio)</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </TabsContent>
           </Tabs>
         </div>

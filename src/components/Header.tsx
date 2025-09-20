@@ -8,7 +8,7 @@ export function Header() {
   };
 
   const handleWhatsApp = () => {
-    window.open('https://ultramsg.com/m/46uLKXg', '_blank');
+    window.open('https://alvo.chat/6DB4', '_blank');
   };
 
   return (

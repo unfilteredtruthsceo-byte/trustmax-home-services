@@ -8,6 +8,7 @@ export interface Package {
   package_name: string;
   description: string;
   pricing: string;
+  image_url?: string;
   created_at: string;
   updated_at: string;
 }

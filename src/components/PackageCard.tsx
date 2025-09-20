@@ -10,6 +10,15 @@ interface PackageCardProps {
 export function PackageCard({ package: pkg }: PackageCardProps) {
   return (
     <Card className="shadow-card hover:shadow-elegant transition-smooth group hover:-translate-y-1 border-border/50">
+      {(pkg as any).image_url && (
+        <div className="aspect-video overflow-hidden rounded-t-lg">
+          <img 
+            src={(pkg as any).image_url} 
+            alt={pkg.package_name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-smooth"
+          />
+        </div>
+      )}
       <CardHeader className="pb-4">
         <CardTitle className="text-lg font-semibold text-foreground group-hover:text-primary transition-smooth">
           {pkg.package_name}

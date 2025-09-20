@@ -20,7 +20,7 @@ const Index = () => {
   };
 
   const handleWhatsApp = () => {
-    window.open('https://ultramsg.com/m/46uLKXg', '_blank');
+    window.open('https://alvo.chat/6DB4', '_blank');
   };
 
   // Group packages by service category
