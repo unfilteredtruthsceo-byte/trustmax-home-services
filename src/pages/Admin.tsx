@@ -10,15 +10,16 @@ import { usePackages } from '@/hooks/usePackages';
 import { PackageManagement } from '@/components/PackageManagement';
 import { ServiceManagement } from '@/components/ServiceManagement';
 import { useServices } from '@/hooks/useServices';
+import { ImageUpload } from '@/components/ImageUpload';
 import { AdminProtectedRoute } from '@/components/AdminProtectedRoute';
-import { BarChart, Users, Clock, CheckCircle, Phone, MapPin, Calendar, Filter, LogOut } from 'lucide-react';
+import { BarChart, Users, Clock, CheckCircle, Phone, MapPin, Calendar, Filter, LogOut, RefreshCw } from 'lucide-react';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 
 export function Admin() {
   const { enquiries, updateEnquiry, loading: enquiriesLoading } = useEnquiries();
-  const { packages, loading: packagesLoading } = usePackages();
-  const { services, loading: servicesLoading } = useServices();
+  const { packages, loading: packagesLoading, refetch: refetchPackages } = usePackages();
+  const { services, loading: servicesLoading, refetch: refetchServices } = useServices();
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [filterService, setFilterService] = useState<string>('all');
   const navigate = useNavigate();
@@ -58,6 +59,16 @@ export function Admin() {
       status: newStatus as any,
       ...(assignedWorker && { assigned_worker: assignedWorker })
     });
+  };
+
+  const handleImageUploaded = (url: string, fileName: string, type: 'package' | 'service') => {
+    console.log(`New ${type} image uploaded:`, { url, fileName });
+    // Refresh the relevant data to show new images
+    if (type === 'package') {
+      refetchPackages();
+    } else {
+      refetchServices();
+    }
   };
 
   return (
@@ -314,14 +325,32 @@ export function Admin() {
             </TabsContent>
 
             <TabsContent value="images" className="space-y-6">
-              <Card className="shadow-card">
-                <CardHeader>
-                  <CardTitle>Image Gallery & Upload</CardTitle>
-                  <CardDescription>
-                    View and access images from packages and services. Use image hosting services like Imgur, Cloudinary, or direct URLs.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
+              <div className="space-y-6">
+                <ImageUpload onImageUploaded={handleImageUploaded} />
+                
+                <Card className="shadow-card">
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <CardTitle>Image Gallery</CardTitle>
+                        <CardDescription>
+                          View and manage uploaded images from packages and services
+                        </CardDescription>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          refetchPackages();
+                          refetchServices();
+                        }}
+                      >
+                        <RefreshCw className="w-4 h-4 mr-2" />
+                        Refresh
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
                   <div>
                     <h3 className="text-lg font-semibold mb-3">Package Images</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -375,17 +404,19 @@ export function Admin() {
                     </div>
                   </div>
 
-                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <h4 className="font-medium text-blue-900 mb-2">Image Upload Instructions</h4>
-                    <div className="text-sm text-blue-800 space-y-1">
-                      <p>• Upload images to free services like <a href="https://imgur.com/upload" target="_blank" className="underline hover:text-blue-600">Imgur</a></p>
-                      <p>• Use <a href="https://cloudinary.com" target="_blank" className="underline hover:text-blue-600">Cloudinary</a> for professional image management</p>
-                      <p>• Copy the direct image URL and paste it in the package/service form</p>
-                      <p>• Recommended image size: 800x450px (16:9 aspect ratio)</p>
+                    <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                      <h4 className="font-medium text-green-900 mb-2">How to Use Uploaded Images</h4>
+                      <div className="text-sm text-green-800 space-y-1">
+                        <p>• Images uploaded here are stored in Supabase Storage</p>
+                        <p>• Copy the image URL from the gallery above</p>
+                        <p>• Paste the URL in package or service forms when editing</p>
+                        <p>• Images are automatically optimized and served via CDN</p>
+                        <p>• Recommended size: 800x450px (16:9 aspect ratio) for best results</p>
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </div>
             </TabsContent>
           </Tabs>
         </div>
