@@ -12,21 +12,45 @@ import { ServiceManagement } from '@/components/ServiceManagement';
 import { useServices } from '@/hooks/useServices';
 import { ImageUpload } from '@/components/ImageUpload';
 import { AdminProtectedRoute } from '@/components/AdminProtectedRoute';
+import { useAuth } from '@/hooks/useAuth';
 import { BarChart, Users, Clock, CheckCircle, Phone, MapPin, Calendar, Filter, LogOut, RefreshCw } from 'lucide-react';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 export function Admin() {
   const { enquiries, updateEnquiry, loading: enquiriesLoading } = useEnquiries();
   const { packages, loading: packagesLoading, refetch: refetchPackages } = usePackages();
   const { services, loading: servicesLoading, refetch: refetchServices } = useServices();
+  const { signOut } = useAuth();
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [filterService, setFilterService] = useState<string>('all');
   const navigate = useNavigate();
+  const { toast } = useToast();
 
-  const handleLogout = () => {
-    localStorage.removeItem('adminLoggedIn');
-    navigate('/admin-login');
+  const handleLogout = async () => {
+    try {
+      const { error } = await signOut();
+      if (error) {
+        toast({
+          title: "Logout Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Logged Out",
+          description: "Successfully logged out",
+        });
+        navigate('/admin-login');
+      }
+    } catch (error) {
+      toast({
+        title: "Logout Failed", 
+        description: "An unexpected error occurred",
+        variant: "destructive",
+      });
+    }
   };
 
   const getStatusColor = (status: string) => {

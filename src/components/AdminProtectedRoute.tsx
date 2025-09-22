@@ -1,5 +1,6 @@
 import { ReactNode, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 
 interface AdminProtectedRouteProps {
   children: ReactNode;
@@ -7,15 +8,23 @@ interface AdminProtectedRouteProps {
 
 export function AdminProtectedRoute({ children }: AdminProtectedRouteProps) {
   const navigate = useNavigate();
-  const isLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+  const { user, loading, isAdmin } = useAuth();
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!loading && (!user || !isAdmin)) {
       navigate('/admin-login');
     }
-  }, [isLoggedIn, navigate]);
+  }, [user, isAdmin, loading, navigate]);
 
-  if (!isLoggedIn) {
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (!user || !isAdmin) {
     return null;
   }
 
