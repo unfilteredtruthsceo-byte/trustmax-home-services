@@ -89,6 +89,23 @@ export function useAuth() {
   };
 
   const signUp = async (email: string, password: string) => {
+    // Input validation
+    if (!email.trim() || !password.trim()) {
+      return { 
+        data: null, 
+        error: { message: 'Email and password are required' } 
+      };
+    }
+
+    // Basic email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return { 
+        data: null, 
+        error: { message: 'Please enter a valid email address' } 
+      };
+    }
+
     const redirectUrl = `${window.location.origin}/`;
     
     const { data, error } = await supabase.auth.signUp({

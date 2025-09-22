@@ -27,13 +27,25 @@ export function AdminLogin() {
     e.preventDefault();
     setIsLoading(true);
 
+    // Basic input validation
+    if (!email.trim() || !password.trim()) {
+      toast({
+        title: "Invalid Input",
+        description: "Please enter both email and password.",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const { error } = await signIn(email, password);
 
       if (error) {
+        // Generic error message to prevent information disclosure
         toast({
           title: "Login Failed",
-          description: error.message,
+          description: "Invalid credentials. Please check your email and password.",
           variant: "destructive",
         });
       } else {
@@ -45,7 +57,7 @@ export function AdminLogin() {
     } catch (error) {
       toast({
         title: "Login Failed",
-        description: "An unexpected error occurred",
+        description: "An unexpected error occurred. Please try again.",
         variant: "destructive",
       });
     }
