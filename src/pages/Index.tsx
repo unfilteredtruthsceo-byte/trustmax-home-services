@@ -1,6 +1,7 @@
 import { Header } from '@/components/Header';
 import { ServiceCard } from '@/components/ServiceCard';
 import { PackageCard } from '@/components/PackageCard';
+import { DiwaliHeroSection } from '@/components/DiwaliHeroSection';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -35,6 +36,9 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
+      
+      {/* Diwali Special Section */}
+      <DiwaliHeroSection />
       
       {/* Hero Section */}
       <section className="gradient-hero py-16 px-4">
