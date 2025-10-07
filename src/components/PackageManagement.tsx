@@ -7,7 +7,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { usePackages, Package } from '@/hooks/usePackages';
+import { ImageUpload } from '@/components/ImageUpload';
 import { Plus, Edit2, Trash2, Package2, Image } from 'lucide-react';
 
 const serviceCategories = [
@@ -142,17 +144,44 @@ export function PackageManagement() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="image_url">Package Image URL</Label>
-                <Input
-                  id="image_url"
-                  type="url"
-                  value={formData.image_url}
-                  onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))}
-                  placeholder="https://example.com/package-image.jpg"
-                />
-                <div className="text-xs text-muted-foreground">
-                  Or upload to a service like Imgur, Cloudinary, or use a direct image URL
-                </div>
+                <Label>Package Image</Label>
+                <Tabs defaultValue="upload" className="w-full">
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="upload">Upload Image</TabsTrigger>
+                    <TabsTrigger value="url">Image URL</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="upload" className="mt-4">
+                    <ImageUpload 
+                      uploadType="package"
+                      onImageUploaded={(url) => setFormData(prev => ({ ...prev, image_url: url }))} 
+                    />
+                    {formData.image_url && (
+                      <div className="mt-2 p-2 bg-muted rounded flex items-center justify-between">
+                        <span className="text-xs text-muted-foreground truncate">{formData.image_url}</span>
+                        <Button 
+                          type="button" 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => setFormData(prev => ({ ...prev, image_url: '' }))}
+                        >
+                          Clear
+                        </Button>
+                      </div>
+                    )}
+                  </TabsContent>
+                  <TabsContent value="url" className="mt-4">
+                    <Input
+                      id="image_url"
+                      type="url"
+                      value={formData.image_url}
+                      onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))}
+                      placeholder="https://example.com/package-image.jpg"
+                    />
+                    <div className="text-xs text-muted-foreground mt-2">
+                      Enter a direct image URL or use an image hosting service
+                    </div>
+                  </TabsContent>
+                </Tabs>
               </div>
 
               <div className="flex gap-2">

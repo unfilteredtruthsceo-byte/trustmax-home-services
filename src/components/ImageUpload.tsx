@@ -9,13 +9,14 @@ import { Upload, Image, X, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface ImageUploadProps {
-  onImageUploaded: (url: string, fileName: string, type: 'package' | 'service') => void;
+  onImageUploaded: (url: string) => void;
+  uploadType?: 'package' | 'service';
 }
 
-export function ImageUpload({ onImageUploaded }: ImageUploadProps) {
+export function ImageUpload({ onImageUploaded, uploadType: initialType = 'service' }: ImageUploadProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [uploadType, setUploadType] = useState<'package' | 'service'>('package');
+  const [uploadType, setUploadType] = useState<'package' | 'service'>(initialType);
   const [fileName, setFileName] = useState('');
   const { toast } = useToast();
 
@@ -76,7 +77,7 @@ export function ImageUpload({ onImageUploaded }: ImageUploadProps) {
         .from(bucketName)
         .getPublicUrl(filePath);
 
-      onImageUploaded(publicUrl, customFileName, uploadType);
+      onImageUploaded(publicUrl);
       setFileName('');
       
       toast({

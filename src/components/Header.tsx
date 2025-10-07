@@ -1,8 +1,32 @@
 import { Button } from '@/components/ui/button';
-import { Phone, MessageCircle, Wrench } from 'lucide-react';
+import { Phone, MessageCircle, Wrench, LogIn } from 'lucide-react';
 import { EnquiryDialog } from './EnquiryDialog';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { useEffect, useState } from 'react';
+import { User } from '@supabase/supabase-js';
 
 export function Header() {
+  const navigate = useNavigate();
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    navigate('/');
+  };
+
   const handleCall = () => {
     window.open('tel:+919182498628', '_self');
   };
@@ -28,6 +52,27 @@ export function Header() {
 
           {/* Action Buttons */}
           <div className="flex items-center gap-3">
+            {user ? (
+              <Button
+                onClick={handleSignOut}
+                variant="outline"
+                size="sm"
+                className="hidden sm:flex items-center gap-2"
+              >
+                Sign Out
+              </Button>
+            ) : (
+              <Button
+                onClick={() => navigate('/auth')}
+                variant="outline"
+                size="sm"
+                className="hidden sm:flex items-center gap-2"
+              >
+                <LogIn className="w-4 h-4" />
+                Sign In
+              </Button>
+            )}
+
             <Button
               onClick={handleCall}
               variant="outline"

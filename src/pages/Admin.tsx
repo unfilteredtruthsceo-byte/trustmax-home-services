@@ -85,14 +85,11 @@ export function Admin() {
     });
   };
 
-  const handleImageUploaded = (url: string, fileName: string, type: 'package' | 'service') => {
-    console.log(`New ${type} image uploaded:`, { url, fileName });
-    // Refresh the relevant data to show new images
-    if (type === 'package') {
-      refetchPackages();
-    } else {
-      refetchServices();
-    }
+  const handleImageUploaded = (url: string) => {
+    console.log(`New image uploaded:`, url);
+    // Refresh both packages and services to show new images
+    refetchPackages();
+    refetchServices();
   };
 
   return (
