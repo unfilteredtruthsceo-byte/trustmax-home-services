@@ -19,9 +19,10 @@ export function useServices() {
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
-  const fetchServices = async () => {
+  const fetchServices = async (retryCount = 0) => {
     try {
       setLoading(true);
+      setError(null);
       const { data, error } = await supabase
         .from('services')
         .select('*')
@@ -30,10 +31,17 @@ export function useServices() {
       if (error) throw error;
       setServices(data || []);
     } catch (err: any) {
+      // Retry once if it's a network/connection error
+      if (retryCount < 1 && (err.message?.includes('Failed to fetch') || err.message?.includes('network'))) {
+        setTimeout(() => fetchServices(retryCount + 1), 1000);
+        return;
+      }
+      
       setError(err.message);
+      console.error('Failed to fetch services:', err);
       toast({
         title: "Error",
-        description: "Failed to fetch services",
+        description: "Failed to load services. Please refresh the page.",
         variant: "destructive",
       });
     } finally {

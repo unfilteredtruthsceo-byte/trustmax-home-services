@@ -19,9 +19,10 @@ export function usePackages() {
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
-  const fetchPackages = async () => {
+  const fetchPackages = async (retryCount = 0) => {
     try {
       setLoading(true);
+      setError(null);
       const { data, error } = await supabase
         .from('packages')
         .select('*')
@@ -30,10 +31,17 @@ export function usePackages() {
       if (error) throw error;
       setPackages(data || []);
     } catch (err: any) {
+      // Retry once if it's a network/connection error
+      if (retryCount < 1 && (err.message?.includes('Failed to fetch') || err.message?.includes('network'))) {
+        setTimeout(() => fetchPackages(retryCount + 1), 1000);
+        return;
+      }
+      
       setError(err.message);
+      console.error('Failed to fetch packages:', err);
       toast({
         title: "Error",
-        description: "Failed to fetch packages",
+        description: "Failed to load packages. Please refresh the page.",
         variant: "destructive",
       });
     } finally {
