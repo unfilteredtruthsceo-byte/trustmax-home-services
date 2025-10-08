@@ -18,24 +18,29 @@ export function useAuth() {
   });
 
   useEffect(() => {
-    // Set up auth state listener first
+    let mounted = true;
+
+    const checkAdminStatus = async (userId: string) => {
+      try {
+        const { data, error } = await supabase
+          .rpc('is_admin', { user_uuid: userId });
+        
+        if (!error && mounted) {
+          return data || false;
+        }
+      } catch (error) {
+        console.error('Error checking admin status:', error);
+      }
+      return false;
+    };
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        let isAdmin = false;
-        
-        if (session?.user) {
-          // Check if user is admin
-          try {
-            const { data, error } = await supabase
-              .rpc('is_admin', { user_uuid: session.user.id });
-            
-            if (!error) {
-              isAdmin = data || false;
-            }
-          } catch (error) {
-            console.error('Error checking admin status:', error);
-          }
-        }
+        if (!mounted) return;
+
+        const isAdmin = session?.user 
+          ? await checkAdminStatus(session.user.id)
+          : false;
 
         setAuthState({
           user: session?.user ?? null,
@@ -46,22 +51,13 @@ export function useAuth() {
       }
     );
 
-    // Then check for existing session
+    // Check initial session only once
     supabase.auth.getSession().then(async ({ data: { session } }) => {
-      let isAdmin = false;
-      
-      if (session?.user) {
-        try {
-          const { data, error } = await supabase
-            .rpc('is_admin', { user_uuid: session.user.id });
-          
-          if (!error) {
-            isAdmin = data || false;
-          }
-        } catch (error) {
-          console.error('Error checking admin status:', error);
-        }
-      }
+      if (!mounted) return;
+
+      const isAdmin = session?.user 
+        ? await checkAdminStatus(session.user.id)
+        : false;
 
       setAuthState({
         user: session?.user ?? null,
@@ -71,7 +67,10 @@ export function useAuth() {
       });
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signIn = async (email: string, password: string) => {

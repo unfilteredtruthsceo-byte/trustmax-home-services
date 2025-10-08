@@ -42,17 +42,22 @@ export function AdminLogin() {
       const { error } = await signIn(email, password);
 
       if (error) {
-        // Generic error message to prevent information disclosure
         toast({
           title: "Login Failed",
           description: "Invalid credentials. Please check your email and password.",
           variant: "destructive",
         });
+        setIsLoading(false);
       } else {
         toast({
           title: "Login Successful",
           description: "Welcome to TrustMax Admin Panel",
         });
+        // Wait briefly for auth state to update, then navigate
+        setTimeout(() => {
+          navigate('/admin');
+          setIsLoading(false);
+        }, 500);
       }
     } catch (error) {
       toast({
@@ -60,9 +65,8 @@ export function AdminLogin() {
         description: "An unexpected error occurred. Please try again.",
         variant: "destructive",
       });
+      setIsLoading(false);
     }
-    
-    setIsLoading(false);
   };
 
   return (
