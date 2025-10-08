@@ -22,49 +22,87 @@ export function useAuth() {
 
     const checkAdminStatus = async (userId: string) => {
       try {
-        const { data, error } = await supabase
-          .rpc('is_admin', { user_uuid: userId });
+        const timeoutPromise = new Promise<boolean>((resolve) => 
+          setTimeout(() => resolve(false), 3000)
+        );
         
-        if (!error && mounted) {
-          return data || false;
-        }
+        const checkPromise = supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', userId)
+          .eq('role', 'admin')
+          .maybeSingle()
+          .then(({ data, error }) => {
+            if (!error && mounted) {
+              return !!data;
+            }
+            return false;
+          });
+        
+        return await Promise.race([checkPromise, timeoutPromise]);
       } catch (error) {
         console.error('Error checking admin status:', error);
+        return false;
       }
-      return false;
     };
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
         if (!mounted) return;
-
-        const isAdmin = session?.user 
-          ? await checkAdminStatus(session.user.id)
-          : false;
 
         setAuthState({
           user: session?.user ?? null,
           session,
-          loading: false,
-          isAdmin,
+          loading: true,
+          isAdmin: false,
         });
+
+        if (session?.user) {
+          setTimeout(() => {
+            checkAdminStatus(session.user.id).then((isAdmin) => {
+              if (mounted) {
+                setAuthState({
+                  user: session.user,
+                  session,
+                  loading: false,
+                  isAdmin,
+                });
+              }
+            });
+          }, 0);
+        } else {
+          setAuthState({
+            user: null,
+            session: null,
+            loading: false,
+            isAdmin: false,
+          });
+        }
       }
     );
 
-    // Check initial session only once
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
       if (!mounted) return;
 
-      const isAdmin = session?.user 
-        ? await checkAdminStatus(session.user.id)
-        : false;
-
-      setAuthState({
-        user: session?.user ?? null,
-        session,
-        loading: false,
-        isAdmin,
-      });
+      if (session?.user) {
+        checkAdminStatus(session.user.id).then((isAdmin) => {
+          if (mounted) {
+            setAuthState({
+              user: session.user,
+              session,
+              loading: false,
+              isAdmin,
+            });
+          }
+        });
+      } else {
+        setAuthState({
+          user: null,
+          session: null,
+          loading: false,
+          isAdmin: false,
+        });
+      }
     });
 
     return () => {
