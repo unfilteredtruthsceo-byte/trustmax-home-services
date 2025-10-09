@@ -99,7 +99,7 @@ export function Admin() {
           <div className="mb-8">
             <div className="flex justify-between items-center">
               <div>
-                <h1 className="text-3xl font-bold text-primary mb-2">TrustMax Admin Panel</h1>
+                <h1 className="text-3xl font-bold text-primary mb-2">Tivup Admin Panel</h1>
                 <p className="text-muted-foreground">Manage enquiries, packages and services</p>
               </div>
               <Button variant="outline" onClick={handleLogout}>

@@ -186,7 +186,7 @@ export default function Auth() {
 
         <Card className="shadow-elegant">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold text-primary">Welcome to TrustMax</CardTitle>
+            <CardTitle className="text-2xl font-bold text-primary">Welcome to Tivup</CardTitle>
             <CardDescription>Sign in to your account or create a new one</CardDescription>
           </CardHeader>
           <CardContent>

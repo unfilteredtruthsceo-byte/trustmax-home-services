@@ -45,7 +45,7 @@ export function Header() {
               <Wrench className="w-8 h-8 text-primary" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-primary">TrustMax</h1>
+              <h1 className="text-2xl font-bold text-primary">Tivup</h1>
               <p className="text-sm text-muted-foreground">Home Services Expert</p>
             </div>
           </div>

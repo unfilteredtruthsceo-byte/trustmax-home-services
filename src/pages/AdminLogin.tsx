@@ -51,7 +51,7 @@ export function AdminLogin() {
       } else {
         toast({
           title: "Login Successful",
-          description: "Welcome to TrustMax Admin Panel",
+          description: "Welcome to Tivup Admin Panel",
         });
         // Wait briefly for auth state to update, then navigate
         setTimeout(() => {
@@ -76,7 +76,7 @@ export function AdminLogin() {
           <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
             <Lock className="w-6 h-6 text-primary" />
           </div>
-          <CardTitle className="text-2xl font-bold text-primary">TrustMax Admin</CardTitle>
+          <CardTitle className="text-2xl font-bold text-primary">Tivup Admin</CardTitle>
           <CardDescription>
             Enter your credentials to access the admin panel
           </CardDescription>

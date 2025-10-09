@@ -110,6 +110,124 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Why Choose Tivup - Unique Value Proposition */}
+      <section className="py-16 px-4 bg-gradient-to-b from-primary/5 to-background">
+        <div className="container mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">Why Choose Tivup?</h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              Experience the difference with our innovative approach to home services
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <Card className="border-primary/20 shadow-elegant hover-scale">
+              <CardHeader>
+                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                  <Award className="w-6 h-6 text-primary" />
+                </div>
+                <CardTitle className="text-xl">Instant Coupon Redemption</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Your coupon codes are redeemed directly at your location by our executive partner. No hassle, no waiting - just instant savings on the spot!
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-primary/20 shadow-elegant hover-scale">
+              <CardHeader>
+                <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mb-4">
+                  <Users className="w-6 h-6 text-accent" />
+                </div>
+                <CardTitle className="text-xl">Verified Professionals</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Every technician is thoroughly vetted, certified, and background-checked. We only send the best to your home, guaranteed.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-primary/20 shadow-elegant hover-scale">
+              <CardHeader>
+                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                  <Star className="w-6 h-6 text-yellow-500" />
+                </div>
+                <CardTitle className="text-xl">Quality Assurance</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  We stand behind our work with a comprehensive warranty. If you are not 100% satisfied, we will make it right - no questions asked.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-primary/20 shadow-elegant hover-scale">
+              <CardHeader>
+                <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mb-4">
+                  <Clock className="w-6 h-6 text-accent" />
+                </div>
+                <CardTitle className="text-xl">Same-Day Service</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Emergency? No problem! We offer same-day service for urgent repairs. Your comfort and safety are our top priorities.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-primary/20 shadow-elegant hover-scale">
+              <CardHeader>
+                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                  <Badge className="w-6 h-6 text-primary" />
+                </div>
+                <CardTitle className="text-xl">Transparent Pricing</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  No hidden fees, no surprise charges. Get upfront quotes and detailed breakdowns before any work begins. What you see is what you pay.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-primary/20 shadow-elegant hover-scale">
+              <CardHeader>
+                <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mb-4">
+                  <MessageCircle className="w-6 h-6 text-green-600" />
+                </div>
+                <CardTitle className="text-xl">Real-Time Updates</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Track your service request in real-time via WhatsApp. Know exactly when our team will arrive and get instant notifications at every step.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Special Highlight Box */}
+          <div className="mt-12 max-w-4xl mx-auto">
+            <Card className="border-2 border-primary/30 bg-gradient-to-r from-primary/5 to-accent/5 shadow-xl">
+              <CardContent className="p-8">
+                <div className="flex flex-col md:flex-row items-center gap-6">
+                  <div className="flex-shrink-0 w-20 h-20 bg-primary rounded-full flex items-center justify-center">
+                    <Award className="w-10 h-10 text-primary-foreground" />
+                  </div>
+                  <div className="flex-1 text-center md:text-left">
+                    <h3 className="text-2xl font-bold text-primary mb-2">Exclusive Coupon Benefits</h3>
+                    <p className="text-muted-foreground text-lg">
+                      All coupon codes are verified and redeemed instantly at your doorstep by our executive partner. 
+                      No scanning, no apps needed - just show your code and save! It is that simple.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* Services Section */}
       <section className="py-16 px-4">
         <div className="container mx-auto">
@@ -205,7 +323,7 @@ const Index = () => {
       {/* Footer */}
       <div className="text-center py-4 bg-muted/50">
         <p className="text-xs text-muted-foreground">
-          © 2025 TrustMax. All rights reserved.
+          © 2025 Tivup. All rights reserved.
         </p>
       </div>
     </div>
