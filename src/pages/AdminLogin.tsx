@@ -19,7 +19,7 @@ export function AdminLogin() {
   // Redirect if already logged in as admin
   useEffect(() => {
     if (user && isAdmin) {
-      navigate('/admin');
+      navigate('/jambalakadijarumitai');
     }
   }, [user, isAdmin, navigate]);
 
@@ -55,7 +55,7 @@ export function AdminLogin() {
         });
         // Wait briefly for auth state to update, then navigate
         setTimeout(() => {
-          navigate('/admin');
+          navigate('/jambalakadijarumitai');
           setIsLoading(false);
         }, 500);
       }
