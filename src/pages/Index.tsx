@@ -24,6 +24,13 @@ const Index = () => {
     window.open('https://alvo.chat/6DB4', '_blank');
   };
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   // Group packages by service category
   const packagesByCategory = packages.reduce((acc, pkg) => {
     if (!acc[pkg.service_category]) {
@@ -49,6 +56,26 @@ const Index = () => {
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto animate-fade-in">
             From plumbing to complete construction - we handle all your home improvement needs with expert craftsmanship and reliable service.
           </p>
+
+          {/* Quick Navigation Buttons */}
+          <div className="flex flex-wrap gap-3 justify-center items-center mb-6">
+            <Button 
+              onClick={() => scrollToSection('services-section')}
+              variant="outline"
+              size="lg"
+              className="border-primary hover:bg-primary hover:text-primary-foreground shadow-md"
+            >
+              View Our Services
+            </Button>
+            <Button 
+              onClick={() => scrollToSection('packages-section')}
+              variant="outline"
+              size="lg"
+              className="border-accent hover:bg-accent hover:text-accent-foreground shadow-md"
+            >
+              View Packages
+            </Button>
+          </div>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-bounce-in mb-6">
             <EnquiryDialog>
@@ -229,7 +256,7 @@ const Index = () => {
       </section>
 
       {/* Services Section */}
-      <section className="py-16 px-4">
+      <section id="services-section" className="py-16 px-4 scroll-mt-20">
         <div className="container mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">Our Services</h2>
@@ -256,7 +283,7 @@ const Index = () => {
       </section>
 
       {/* Packages Section */}
-      <section className="py-16 px-4 bg-muted/30">
+      <section id="packages-section" className="py-16 px-4 bg-muted/30 scroll-mt-20">
         <div className="container mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">Service Packages</h2>
