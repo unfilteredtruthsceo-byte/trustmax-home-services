@@ -58,21 +58,21 @@ const Index = () => {
           </p>
 
           {/* Quick Navigation Buttons */}
-          <div className="flex flex-wrap gap-3 justify-center items-center mb-6">
+          <div className="flex flex-wrap gap-4 justify-center items-center mb-8 animate-fade-in">
             <Button 
               onClick={() => scrollToSection('services-section')}
-              variant="outline"
               size="lg"
-              className="border-primary hover:bg-primary hover:text-primary-foreground shadow-md"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-elegant text-lg px-8 py-6 hover-scale"
             >
+              <Star className="w-5 h-5 mr-2" />
               View Our Services
             </Button>
             <Button 
               onClick={() => scrollToSection('packages-section')}
-              variant="outline"
               size="lg"
-              className="border-accent hover:bg-accent hover:text-accent-foreground shadow-md"
+              className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-elegant text-lg px-8 py-6 hover-scale"
             >
+              <Award className="w-5 h-5 mr-2" />
               View Packages
             </Button>
           </div>
@@ -134,6 +134,69 @@ const Index = () => {
               <span className="text-sm font-medium">24/7 Support</span>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section id="services-section" className="py-16 px-4 scroll-mt-20">
+        <div className="container mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">Our Services</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Complete home service solutions under one roof. Quality work, transparent pricing, and reliable service guaranteed.
+            </p>
+          </div>
+
+          {servicesLoading ? (
+            <div className="text-center py-8 text-muted-foreground">Loading services...</div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {services.map((service, index) => (
+                <ServiceCard
+                  key={service.id}
+                  service={service}
+                  icon={service.icon}
+                  index={index}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Packages Section */}
+      <section id="packages-section" className="py-16 px-4 bg-muted/30 scroll-mt-20">
+        <div className="container mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">Service Packages</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Ready-to-go packages with transparent pricing for common home service needs.
+            </p>
+          </div>
+
+          {packagesLoading ? (
+            <div className="text-center py-8 text-muted-foreground">Loading packages...</div>
+          ) : (
+            <div className="space-y-12">
+              {Object.entries(packagesByCategory).map(([category, categoryPackages]) => (
+                <div key={category}>
+                  <h3 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-2">
+                    <Badge variant="outline" className="px-3 py-1">
+                      {category}
+                    </Badge>
+                    <span className="text-lg text-muted-foreground">
+                      ({categoryPackages.length} packages)
+                    </span>
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {categoryPackages.map((pkg) => (
+                      <PackageCard key={pkg.id} package={pkg} />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -252,69 +315,6 @@ const Index = () => {
               </CardContent>
             </Card>
           </div>
-        </div>
-      </section>
-
-      {/* Services Section */}
-      <section id="services-section" className="py-16 px-4 scroll-mt-20">
-        <div className="container mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">Our Services</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Complete home service solutions under one roof. Quality work, transparent pricing, and reliable service guaranteed.
-            </p>
-          </div>
-
-          {servicesLoading ? (
-            <div className="text-center py-8 text-muted-foreground">Loading services...</div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {services.map((service, index) => (
-                <ServiceCard
-                  key={service.id}
-                  service={service}
-                  icon={service.icon}
-                  index={index}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Packages Section */}
-      <section id="packages-section" className="py-16 px-4 bg-muted/30 scroll-mt-20">
-        <div className="container mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">Service Packages</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Ready-to-go packages with transparent pricing for common home service needs.
-            </p>
-          </div>
-
-          {packagesLoading ? (
-            <div className="text-center py-8 text-muted-foreground">Loading packages...</div>
-          ) : (
-            <div className="space-y-12">
-              {Object.entries(packagesByCategory).map(([category, categoryPackages]) => (
-                <div key={category}>
-                  <h3 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-2">
-                    <Badge variant="outline" className="px-3 py-1">
-                      {category}
-                    </Badge>
-                    <span className="text-lg text-muted-foreground">
-                      ({categoryPackages.length} packages)
-                    </span>
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {categoryPackages.map((pkg) => (
-                      <PackageCard key={pkg.id} package={pkg} />
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
       </section>
 
