@@ -9,7 +9,9 @@ import { useEnquiries } from '@/hooks/useEnquiries';
 import { usePackages } from '@/hooks/usePackages';
 import { PackageManagement } from '@/components/PackageManagement';
 import { ServiceManagement } from '@/components/ServiceManagement';
+import { ProductManagement } from '@/components/ProductManagement';
 import { useServices } from '@/hooks/useServices';
+import { useProducts } from '@/hooks/useProducts';
 import { ImageUpload } from '@/components/ImageUpload';
 import { AdminProtectedRoute } from '@/components/AdminProtectedRoute';
 import { useAuth } from '@/hooks/useAuth';
@@ -22,6 +24,7 @@ export function Admin() {
   const { enquiries, updateEnquiry, loading: enquiriesLoading } = useEnquiries();
   const { packages, loading: packagesLoading, refetch: refetchPackages } = usePackages();
   const { services, loading: servicesLoading, refetch: refetchServices } = useServices();
+  const { products, loading: productsLoading, refetch: refetchProducts } = useProducts();
   const { signOut } = useAuth();
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [filterService, setFilterService] = useState<string>('all');
@@ -87,9 +90,10 @@ export function Admin() {
 
   const handleImageUploaded = (url: string) => {
     console.log(`New image uploaded:`, url);
-    // Refresh both packages and services to show new images
+    // Refresh packages, services, and products to show new images
     refetchPackages();
     refetchServices();
+    refetchProducts();
   };
 
   return (
@@ -169,10 +173,11 @@ export function Admin() {
         </div>
 
           <Tabs defaultValue="enquiries" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="enquiries">Enquiries</TabsTrigger>
               <TabsTrigger value="packages">Packages</TabsTrigger>
               <TabsTrigger value="services">Services</TabsTrigger>
+              <TabsTrigger value="products">Products</TabsTrigger>
               <TabsTrigger value="images">Image Gallery</TabsTrigger>
             </TabsList>
 
@@ -345,6 +350,10 @@ export function Admin() {
               <ServiceManagement />
             </TabsContent>
 
+            <TabsContent value="products" className="space-y-6">
+              <ProductManagement />
+            </TabsContent>
+
             <TabsContent value="images" className="space-y-6">
               <div className="space-y-6">
                 <ImageUpload onImageUploaded={handleImageUploaded} />
@@ -355,7 +364,7 @@ export function Admin() {
                       <div>
                         <CardTitle>Image Gallery</CardTitle>
                         <CardDescription>
-                          View and manage uploaded images from packages and services
+                          View and manage uploaded images from packages, services, and products
                         </CardDescription>
                       </div>
                       <Button
@@ -364,6 +373,7 @@ export function Admin() {
                         onClick={() => {
                           refetchPackages();
                           refetchServices();
+                          refetchProducts();
                         }}
                       >
                         <RefreshCw className="w-4 h-4 mr-2" />
@@ -425,12 +435,39 @@ export function Admin() {
                     </div>
                   </div>
 
+                  <div>
+                    <h3 className="text-lg font-semibold mb-3">Product Images</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {products.filter(product => product.image_url).map((product) => (
+                        <div key={product.id} className="space-y-2">
+                          <div className="aspect-video bg-muted rounded-lg overflow-hidden">
+                            <img 
+                              src={product.image_url!} 
+                              alt={product.name}
+                              className="w-full h-full object-cover hover:scale-105 transition-smooth cursor-pointer"
+                              onClick={() => window.open(product.image_url!, '_blank')}
+                            />
+                          </div>
+                          <div className="text-sm">
+                            <p className="font-medium">{product.name}</p>
+                            <p className="text-xs text-muted-foreground">{product.category}</p>
+                          </div>
+                        </div>
+                      ))}
+                      {products.filter(product => product.image_url).length === 0 && (
+                        <div className="col-span-full text-center py-8 text-muted-foreground">
+                          No product images uploaded yet
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
                     <div className="p-4 bg-green-50 rounded-lg border border-green-200">
                       <h4 className="font-medium text-green-900 mb-2">How to Use Uploaded Images</h4>
                       <div className="text-sm text-green-800 space-y-1">
                         <p>• Images uploaded here are stored in Supabase Storage</p>
                         <p>• Copy the image URL from the gallery above</p>
-                        <p>• Paste the URL in package or service forms when editing</p>
+                        <p>• Paste the URL in package, service, or product forms when editing</p>
                         <p>• Images are automatically optimized and served via CDN</p>
                         <p>• Recommended size: 800x450px (16:9 aspect ratio) for best results</p>
                       </div>

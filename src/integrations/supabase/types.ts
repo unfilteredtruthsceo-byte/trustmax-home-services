@@ -19,6 +19,7 @@ export type Database = {
           assigned_worker: string | null
           budget: string | null
           created_at: string
+          customer_image_url: string | null
           description: string
           email: string | null
           enquiry_type: string
@@ -34,6 +35,7 @@ export type Database = {
           assigned_worker?: string | null
           budget?: string | null
           created_at?: string
+          customer_image_url?: string | null
           description: string
           email?: string | null
           enquiry_type?: string
@@ -49,6 +51,7 @@ export type Database = {
           assigned_worker?: string | null
           budget?: string | null
           created_at?: string
+          customer_image_url?: string | null
           description?: string
           email?: string | null
           enquiry_type?: string
@@ -91,6 +94,48 @@ export type Database = {
           package_name?: string
           pricing?: string
           service_category?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          id: string
+          image_url: string | null
+          images: Json | null
+          name: string
+          price: string
+          specifications: Json | null
+          stock_status: string | null
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description: string
+          id?: string
+          image_url?: string | null
+          images?: Json | null
+          name: string
+          price: string
+          specifications?: Json | null
+          stock_status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          images?: Json | null
+          name?: string
+          price?: string
+          specifications?: Json | null
+          stock_status?: string | null
           updated_at?: string
         }
         Relationships: []

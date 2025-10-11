@@ -14,6 +14,7 @@ export interface Enquiry {
   status: 'pending' | 'assigned' | 'completed' | 'cancelled';
   assigned_worker?: string;
   enquiry_type: 'general' | 'package' | 'interior_design' | 'consultation';
+  customer_image_url?: string;
   created_at: string;
   updated_at: string;
 }

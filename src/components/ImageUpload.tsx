@@ -10,13 +10,13 @@ import { useToast } from '@/hooks/use-toast';
 
 interface ImageUploadProps {
   onImageUploaded: (url: string) => void;
-  uploadType?: 'package' | 'service';
+  uploadType?: 'package' | 'service' | 'product';
 }
 
 export function ImageUpload({ onImageUploaded, uploadType: initialType = 'service' }: ImageUploadProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [uploadType, setUploadType] = useState<'package' | 'service'>(initialType);
+  const [uploadType, setUploadType] = useState<'package' | 'service' | 'product'>(initialType);
   const [fileName, setFileName] = useState('');
   const { toast } = useToast();
 
@@ -62,7 +62,7 @@ export function ImageUpload({ onImageUploaded, uploadType: initialType = 'servic
       const fileExt = file.name.split('.').pop();
       const customFileName = fileName.trim() || file.name.split('.')[0];
       const filePath = `${customFileName}-${Date.now()}.${fileExt}`;
-      const bucketName = uploadType === 'package' ? 'package-images' : 'service-images';
+      const bucketName = uploadType === 'package' ? 'package-images' : uploadType === 'product' ? 'product-images' : 'service-images';
 
       const { data, error } = await supabase.storage
         .from(bucketName)
@@ -123,13 +123,14 @@ export function ImageUpload({ onImageUploaded, uploadType: initialType = 'servic
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="uploadType">Upload Type</Label>
-              <Select value={uploadType} onValueChange={(value: 'package' | 'service') => setUploadType(value)}>
+              <Select value={uploadType} onValueChange={(value: 'package' | 'service' | 'product') => setUploadType(value)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="package">📦 Package Image</SelectItem>
                   <SelectItem value="service">🛠️ Service Image</SelectItem>
+                  <SelectItem value="product">🛍️ Product Image</SelectItem>
                 </SelectContent>
               </Select>
             </div>

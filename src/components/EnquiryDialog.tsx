@@ -7,7 +7,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useEnquiries } from '@/hooks/useEnquiries';
 import { LocationInput } from './LocationInput';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Upload, X } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 interface EnquiryDialogProps {
   children: React.ReactNode;
@@ -33,8 +35,10 @@ const serviceOptions = [
 export function EnquiryDialog({ children, defaultService, enquiryType = 'general', packageName }: EnquiryDialogProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const { createEnquiry } = useEnquiries();
+  const { toast } = useToast();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -43,7 +47,8 @@ export function EnquiryDialog({ children, defaultService, enquiryType = 'general
     location: '',
     service_type: defaultService || '',
     description: '',
-    budget: ''
+    budget: '',
+    customer_image_url: ''
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -53,6 +58,7 @@ export function EnquiryDialog({ children, defaultService, enquiryType = 'general
     const result = await createEnquiry({
       ...formData,
       email: formData.email || undefined,
+      customer_image_url: formData.customer_image_url || undefined,
       enquiry_type: enquiryType
     });
 
@@ -65,7 +71,8 @@ export function EnquiryDialog({ children, defaultService, enquiryType = 'general
         location: '',
         service_type: defaultService || '',
         description: '',
-        budget: ''
+        budget: '',
+        customer_image_url: ''
       });
       
       setTimeout(() => {
@@ -79,6 +86,65 @@ export function EnquiryDialog({ children, defaultService, enquiryType = 'general
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Invalid file type",
+        description: "Please select an image file",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Please select an image smaller than 5MB",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const filePath = `customer-enquiry-${Date.now()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('product-images')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('product-images')
+        .getPublicUrl(filePath);
+
+      setFormData(prev => ({ ...prev, customer_image_url: publicUrl }));
+
+      toast({
+        title: "Image uploaded",
+        description: "Your image has been uploaded successfully",
+      });
+    } catch (error: any) {
+      console.error('Upload error:', error);
+      toast({
+        title: "Upload failed",
+        description: error.message || "Failed to upload image",
+        variant: "destructive"
+      });
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const removeImage = () => {
+    setFormData(prev => ({ ...prev, customer_image_url: '' }));
   };
 
   if (showSuccess) {
@@ -195,6 +261,47 @@ export function EnquiryDialog({ children, defaultService, enquiryType = 'general
               onChange={(e) => handleInputChange('budget', e.target.value)}
               placeholder="Enter your budget range"
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="image">Attach Image (Optional)</Label>
+            <p className="text-xs text-muted-foreground mb-2">
+              Upload a reference image or photo of the area/item
+            </p>
+            {formData.customer_image_url ? (
+              <div className="relative">
+                <img
+                  src={formData.customer_image_url}
+                  alt="Uploaded"
+                  className="w-full h-32 object-cover rounded-lg border"
+                />
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="icon"
+                  className="absolute top-2 right-2"
+                  onClick={removeImage}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            ) : (
+              <div className="relative">
+                <Input
+                  id="image"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  disabled={uploading}
+                  className="cursor-pointer"
+                />
+                {uploading && (
+                  <div className="absolute inset-0 bg-background/80 flex items-center justify-center rounded">
+                    <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           <Button 
